@@ -158,3 +158,92 @@ yum update -y
 
 # Dockerfile
 
+## Dockerfile基本介绍
+
+#### Dockerfile简介
+
+- Dockerfile描述了docker容器的依赖和构建过程
+
+- 可以根据Dockerfile中描述的构建过程自动搭建容器
+
+#### 为什么要使用Dockerfile
+
+- **可定制性**:相比docker容器,dockerfile允许接收方能够**更好地查看并修改**镜像中的部分
+- 安全性:dockerfile允许接收方进行审查有无安全风险
+- 减少传输量:一个文本文件仅仅几十KB,而相应的镜像可能多达几十GB
+- 版本控制与协作:dockerfile可以使用git进行版本控制,并且可以由团队成员创建分支共同开发
+
+## Dockerfile的指令介绍
+
+#### 基础指令
+
+```dockerfile
+FROM 指定基础镜像
+MAINTAINER 指定维护者信息,可以没有
+RUN 执行命令(install之类的)
+ADD 添加宿主机压缩包文件到容器内,自动解压
+COPY [宿主机相对文件/目录路径] [目标镜像中路径] :拷贝宿主机文件到容器内
+
+
+ENTRYPOINT ["参数1","参数2"...]: 指定容器启动程序以及参数,有了ENTRYPOINT之后CMD就会变成ENTRYPOINT的参数
+	在docker run的时候输入的参数会覆盖CMD参数,并且会作为ENTRYPOINT参数的补充
+CMD ["参数1","参数2"...] : 指定容器启动之后执行的运行参数
+	CMD ["/bin/bash"]:在容器启动之后执行/bin/bash作为交互器
+	CMD ["cat","/etc/os-release"]
+	在docker run的时候输入的参数会覆盖CMD指定的参数
+	
+ENV 变量名=变量值 :定义环境变量,之后可以使用$变量名来进行调用.在镜像构建和容器运行时都生效
+	ENV MYSQL_VERSION=5.6
+	ENV NAME="illusion"
+ARG 变量名=变量值 :定义环境变量,只在镜像构建的时候生效,容器运行时失效
+
+VOLUME :容器在运行的时候
+EXPOSE 在容器内暴露一个端口给主机,容器端口默认全封闭(EXPOSE 80)
+WORKDIR 指定工作目录(就是cd)
+USER 11
+```
+
+- COPY指令需要让被复制的文件和Docker处于相同目录或者子目录下,并且使用相对路径
+- dockerfile命名需要是`Dockerfile`首字母大写其他小写
+- **容器中程序一般都是前台运行,没有后台运行的概念**;容器就是为了主进程存在的,如果主进程结束,容器就应该退出因为容器就失去了存在的意义
+  - 容器中不能用systemctl运行守护进程
+  - 如果没有前台运行,容器就会立即退出
+- 容器在运行的时候,应该保证在存储层不写入任何数据.**运行在容器内产生的数据**,我们推荐是**挂载,写入到宿主机上进行维护**
+  - 日志文件
+  - 用户数据
+
+#### 使用Dockerfile创建镜像
+
+`docker build -t [image_name] [path]`
+
+#### Dockerfile实践
+
+- 需求1:通过Dockerfile,构建nginx镜像.且运行容器之后,页面为welcome to dockerfile
+
+```dockerfile
+FROM nginx
+RUN echo '<h1>Welcome to dockerfile!</h1>' > /usr/share/nginx/html/index.html
+```
+
+- 需求2:自定义nginx服务配置的主页
+
+```shell
+FROM nginx
+RUN rm -rf /usr/share/nginx/html/*
+COPY html/* /usr/share/nginx/html
+```
+
+- 需求3:获取当前IP,或者使用-I获取请求头
+
+```dockerfile
+FROM centos:7.8.2003
+RUN rpm --rebuilddb && yum install epel-release -y
+RUN rpm --rebuilddb && yum install curl -y
+ENTRYPOINT ["curl","-s","http://ipinfo.io/ip"]
+
+docker run myapp -I 获取请求头(相当于curl -s http://ipinfo.io/ip -I)
+docker run myapp 获取当前IP(相当于curl -s http://ipinfo.io/ip)
+```
+
+
+

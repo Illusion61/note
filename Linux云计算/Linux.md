@@ -286,12 +286,27 @@ dpkg-reconfigure locales #空格键选中,TAB切换到OK,Enter确定
 #### 磁盘压缩vmware
 
 ```bash
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-  bookworm stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
+sudo /usr/bin/vmware-toolbox-cmd disk list
+sudo /usr/bin/vmware-toolbox-cmd disk shrink /
 ```
+
+## Ubuntu桌面版
+
+#### 基础配置
+
+- 安装输入法:`apt-get install fcitx fcitx-googlepinyin`
+  - 切换到settings中的language&region部分->Manage Install Languages->切换输入法为fcitx
+  - 重启系统生效
+
+- 复制文件:把CD/DVD的虚拟设备节点改成IDE
+
+## 酷炫终端配置
+
+#### 切换bash为zsh
+
+
+
+
 
 # 系统配置
 
@@ -357,6 +372,20 @@ minute hour date(of month) month day-of-week command
 
   - 每分钟检测所有日程的时间表达式,查看是否匹配,如果匹配就执行相应的任务
   - crontab不会记录任务的创建日期(何时编辑的任务文件)
+  - crontab配置文件存储路径:/var/spool/cron/crontabs/{用户名}
+
+# vmware配置
+
+## 网络配置
+
+
+
+## 磁盘瘦身
+
+```shell
+sudo /usr/bin/vmware-toolbox-cmd disk list
+sudo /usr/bin/vmware-toolbox-cmd disk shrink /
+```
 
 
 
