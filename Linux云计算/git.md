@@ -224,7 +224,7 @@ git pull [远程仓库名] [远程分支名]:[本地分支名](相同即可省�
 - `git pull = git fetch+git merge`:会更新远程仓库的本地引用并且执行merge操作
   - `git pull`失败之后,建议单独使用git fetch和git merge寻找原因
 
-![2024-01-22 221930](..\others\markdown\2024-01-22 221930.png)
+![2024-01-22 221930]([..\others\markdown\2024-01-22 221930.png](https://raw.githubusercontent.com/Illusion61/note/main/others/markdown/2024-01-22%20221930.png))
 
 ```BUG
 BUG1:
