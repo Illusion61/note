@@ -115,3 +115,21 @@ a == b;//错误,==比较的是两个变量的地址是否相同
 
 - 实现方式:
   - HashSet哈希集合
+
+# JAVA集合进阶
+
+## 集合体系结构
+
+![2024-01-23 075241](C:\homecity\Note\others\markdown\2024-01-23 075241.png)
+
+#### 单列集合 Collection
+
+- List:
+  - ArrayList
+  - LinkedList
+- Set:
+  - HashSet
+  - TreeSet
+  - LinkedHashSet
+
+#### 双列集合 Map

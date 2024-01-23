@@ -171,6 +171,14 @@ git branch: 查看所有分支
 git branch [分支名]: 创建新的分支
 git branch -D [分支名]: 删除指定分支
 git switch [分支名]: 切换到指定的分支
+```
+
+#### 分支合并
+
+- 检查分支&合并分支
+
+```shell
+(a分支下) git diff [分支b]: 比较分支a和分支b的差别
 (main分支下) git merge dev: 将dev合并到main分支中
 ```
 
@@ -224,7 +232,7 @@ git pull [远程仓库名] [远程分支名]:[本地分支名](相同即可省�
 - `git pull = git fetch+git merge`:会更新远程仓库的本地引用并且执行merge操作
   - `git pull`失败之后,建议单独使用git fetch和git merge寻找原因
 
-![2024-01-22 221930](..\others\markdown\2024-01-22 221930.png)
+![2024-01-22 221930](../others/markdown/2024-01-22 221930.png)
 
 ```BUG
 BUG1:
