@@ -223,3 +223,24 @@ git pull [远程仓库名] [远程分支名]:[本地分支名](相同即可省�
 - `git fetch`:只会更新本地的远程仓库的分支引用,不会执行merge操作
 - `git pull = git fetch+git merge`:会更新远程仓库的本地引用并且执行merge操作
   - `git pull`失败之后,建议单独使用git fetch和git merge寻找原因
+
+![2024-01-22 221930](C:\homecity\Note\others\markdown\2024-01-22 221930.png)
+
+```BUG
+BUG1:
+$ git merge origin/main
+fatal: refusing to merge unrelated histories
+原因: 如图所示,由于有不相关的commit存在,无法进行merge(没有公共祖先)
+解决方法: 使用git merge --allow-unrelated-histories origin/main
+
+BUG2:
+$ git push -u origin main
+To github.com:Illusion61/note.git
+ ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'github.com:Illusion61/note.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+
