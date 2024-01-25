@@ -78,15 +78,8 @@ sudo dpkg -i google-chrome*.deb # 如果出错，执行下一个命令
 sudo apt-get install -f
 ```
 
-
-
 #### 实战
 
-- 部署环境
-
-```bash
-
-```
 - 方法列表driver:
 ```txt
 发起请求: get(url)
@@ -149,9 +142,9 @@ for web in webpages:
 
 #### scrapy架构
 
-![image-20240124100150990](C:\homecity\Note\others\markdown\2024-01-24-100207.png)
+![image-20240124100150990](https://raw.githubusercontent.com/Illusion61/note/main/others/markdown/2024-01-24-100207.png)
 
-![2024-01-24-102103](C:\homecity\Note\others\markdown\2024-01-24-102103.png)
+![2024-01-24-102103](https://raw.githubusercontent.com/Illusion61/note/main/others/markdown/2024-01-24-102103.png)
 
 #### 需要自己手写的部分
 
