@@ -78,4 +78,7 @@ Beyond technical skills, I am passionate about leveraging technology to improve 
   This project does not directly study the future of work; rather we aim to use tools from computer science and machine learning to develop new algorithms, tools, and methodologies that can be used to study the future of work. For example, we are currently using Generative Adversarial Networks (GANs) to estimate how on-demand workers decide among multiple apps they can work for. We have also started building a virtual experimental environment in which human participants can make decisions similar to what they could do in the real-world on-demand economy. We particularly recruit EECS majors and/or those who have experience building the front end/games or implementing various machine learning algorithms.
 - 地点:online,remote
 - 需要额外填写链接
-- 
+
+
+
+DeNevc

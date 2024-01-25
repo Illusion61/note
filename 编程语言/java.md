@@ -42,7 +42,18 @@ java Hello #交给JRE运行Hello.class文件,后面不应该加.class后缀
 - constructor
 - getter/setter
 - toString()
-- equals()?????????????
+- equals()
+
+```java
+@Override
+public boolean equals(Object o){
+    if(this == o)return true;//先判断地址是否相同
+    if(o==null || this.getClass()!=o.getClass())return false;//再判断是否为空或者类型是否不一致,防止强转类型报错
+    Dog dog = (Dog)o;
+    return this.weight==o.weight&&this.name.equals(o.name)&&...;
+}
+```
+
 - hashCode()?????????????
 
 #### 静态方法VS动态方法
@@ -99,23 +110,6 @@ a == b;//错误,==比较的是两个变量的地址是否相同
 
 
 
-#### List列表
-
-- 实现方式:
-  - ArrayList数组列表
-  - LinkedList链表列表
-
-#### Map字典
-
-- 实现方式:
-  - HashMap:哈希表
-  - TreeMap:树表
-
-#### Set集合
-
-- 实现方式:
-  - HashSet哈希集合
-
 # JAVA集合进阶
 
 ## 集合体系结构
@@ -124,12 +118,23 @@ a == b;//错误,==比较的是两个变量的地址是否相同
 
 #### 单列集合 Collection
 
+- Collection:Collection是单列集合的祖宗接口,它的功能是所有单列集合都可以继承使用的
+
+```java
+public boolean add(E e);//添加对象进入当前集合中,向Set中添加元素如果重复就返回false
+public boolean remove(E e);//删除给定的对象
+public boolean contains(Object obj);//判断是否包含obj,底层依赖equals()判断是否存在
+public boolean isEmpty();//判断是否为空
+public void clear();//清空集合中所有元素
+public int size();//返回集合的长度
+```
+
 - List:
-  - ArrayList
-  - LinkedList
+  - ArrayList(实现类)
+  - LinkedList(实现类)
 - Set:
-  - HashSet
-  - TreeSet
+  - HashSet(实现类)
+  - TreeSet(实现类)
   - LinkedHashSet
 
 #### 双列集合 Map

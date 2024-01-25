@@ -18,7 +18,6 @@ conda env list
 ##  常见错误
 
 - 安装package之后依然提示无法找到:重新选择一遍jupyter-kernel
-- 
 
 ```conda
 任务一：回归任务—地震等级预测
