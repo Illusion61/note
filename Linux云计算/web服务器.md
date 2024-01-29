@@ -308,6 +308,20 @@ Server: nginx/1.18.0 (Ubuntu)
 
 # 常见的软件配置
 
+## 自动化申请HTTPS证书
+
+#### 手动申请步骤
+
+```bash
+/etc/letsencrypt/archive:存储所有网站证书本体
+/etc/letsencrypt/live:存储所有网站证书快捷方式
+certbot certonly --standalone -d sciform.one #离线的时候进行
+scp -r /etc/letsencrypt/archive root@node2:/etc/letsencrypt#分发证书
+scp -r /etc/letsencrypt/live root@node2:/etc/letsencrypt
+```
+
+
+
 ## apache2安装配置
 
 #### 安装/禁用模块
@@ -640,6 +654,31 @@ location / {
 - 最少连接
 
 - ip_hash
+
+```nginx
+server {
+        listen 0.0.0.0:80 default_server;
+        server_name sciform.one;
+        return 301 https://sciform.one$request_uri;
+}
+server {
+    listen 0.0.0.0:443 ssl http2;
+    server_name sciform.one;
+    #ssl证书文件路径
+    ssl_certificate     /etc/letsencrypt/live/sciform.one/fullchain.pem;
+    ssl_certificate_key  /etc/letsencrypt/live/sciform.one/privkey.pem;
+    # ssl验证相关配置
+    ssl_session_timeout  5m;    #缓存有效期(分钟),有效期内进行会话不用重新建立TLS连接
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;    #加密算法
+    ssl_protocols TLSv1.2 TLSv1.3;    #安全链接可选的加密协议
+    ssl_prefer_server_ciphers on;   #使用服务器端的首选算法,而不是客户端请求的算法
+    location / {
+        proxy_pass http://sciform.one:8080; #反向代理
+    proxy_set_header X-Real-IP $remote_addr;#使用客户端IP地址而不是代理服务器IP地址
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
 
 
 

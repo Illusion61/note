@@ -1,4 +1,4 @@
-# Python爬虫解析
+# Python爬虫基础
 
 ## XPATH
 
@@ -76,6 +76,10 @@ pip3 install selenium
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome*.deb # 如果出错，执行下一个命令
 sudo apt-get install -f
+sudo apt --fix-broken install #解决安装依赖问题
+google-chrome --version #检查版本
+下载浏览器驱动程序(对应指定版本):https://googlechromelabs.github.io/chrome-for-testing/
+pip3 install selenium
 ```
 
 #### 实战
@@ -91,14 +95,12 @@ sudo apt-get install -f
 
 ```txt
 标签定位: find_element(s)_by...
-	find_element_by_xpath()返回一个元素对象
-	find_elements_by_xpath()返回元素对象列表
-	不能使用xpath中.../@attrName取属性,必须返回元素.应该使用get_attribute方法
-	获取属性: 元素.get_attribute('attrName')
-	获取文本: 元素.text
+find_element_by_xpath()返回一个元素对象
+find_elements_by_xpath()返回元素对象列表
+不能使用xpath中.../@attrName取属性,必须返回元素.应该使用get_attribute方法
+获取属性: 元素.get_attribute('attrName')
+获取文本: 元素.text
 ```
-
-
 
 - 代码示例
 ```python
@@ -120,8 +122,6 @@ webpages = browser.find_elements_by_xpath('//div[@class="Mid_L"]//ul/li/a')
 for web in webpages:
 	web_list.append(web.get_attribute('href'))
 ```
-
-
 
 # Scrapy
 
@@ -148,12 +148,12 @@ for web in webpages:
 
 #### 需要自己手写的部分
 
-- 爬虫:提供起始url,解析规则
+- 爬虫:提供起始url,解析规则(parse以及自定义规则)
 - 管道:保存数据
 - 下载中间件:自定义下载配置,比如代理等
 - 爬虫中间件:自定义爬虫配置,比如自定义请求request等
 
-## Scrapy实际操作
+## Scrapy操作简介
 
 #### scapry安装配置
 
@@ -169,6 +169,12 @@ scrapy version 验证是否成功安装scrapy
 
 ```python
 ROBOTSTXT_OBEY = False #是否遵从robots.txt协议,如果为True那么会自动不request一些网页
+LOG_LEVEL = 'ERROR'
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+ITEM_PIPELINES = {
+   "myspider.pipelines.ImgPipe": 300,
+} 
+IMAGES_STORE = './imagePro'
 ```
 
 #### scapry项目全流程
@@ -202,12 +208,220 @@ class HomepageSpider(scrapy.Spider):
 	#起始url-->调度器-->scrapy引擎-->download中间件-->下载器-->spider解析
     def parse(self, response):#response就是获取到的网页数据
         print(response)
-        pass
 ```
 
 - 运行爬虫:`scrapy crawl [爬虫名称] `
 
 ```bash
-scrapy crawl homepage
+scrapy crawl homepage [--nolog]
 ```
+
+## Scrapy编程
+
+#### 爬虫部分
+
+- response属性&方法
+
+```txt
+response.headers:响应头
+response.url:响应url(不包括锚点)
+response.status:响应码
+response.body:响应二进制格式
+response.text:响应文本格式
+response.encoding:编码
+response.meta:元数据,供请求时候传递item使用
+
+response.request:请求对象
+response.request.url:请求url(包括锚点#)
+response.request.headers:请求头
+```
+
+```txt
+response.xpath():使用xpath对结果数据进行解析,返回选择器对象列表
+response.extract():从选择器对象列表或者单个选择器对象中提取数据
+response.extract_first():从选择器对象列表中提取第一个数据,如果为空就返回null
+```
+- 构建scrapy.Request对象
+
+```txt
+yield scrapy.Request(url=url,callback=self.subparse,meta={'item':item})
+```
+- 钩子函数:start_requests
+#### 持久化存储
+
+- 终端指令进行持久化存储
+- 管道进行持久化步骤
+
+```txt
+1. 在item类中定义相关的属性(items.py中)
+    filename = scrapy.Field()
+    url = scrapy.Field()
+2. 数据解析(spider.py)
+3. 将解析到的数据封装到item类型的对象中(spider.py)
+	from myspider.items import MyspiderItem
+	...
+    item = MyspiderItem() 
+    item['filename'] = xxx
+    item['url'] = xxx
+4. 将item类型的对象提交给管道进行持久化存储的操作(spider.py)
+	yield item
+5. 在管道类process_item中将其接收到的item进行持久化存储操作(pipelines.py)
+open_spider
+	filename = item['filename']
+	url = item['url']
+close_spider
+6. 在配置文件中开启管道(settings.py)
+	ITEM_PIPELINES = {
+       "myspider.pipelines.MyspiderPipeline": 300,
+       "myspider.pipelines.MyspiderPipelineMysql":301,
+    } #数字越小,优先级越高
+```
+- **多个管道进行持久化存储**:`怎么将爬虫数据既保存到本地又上传数据库`
+
+  - 管道优先级:高优先级的管道**在**低优先级管道的**前边**
+
+  ```txt
+  ITEM_PIPELINES = {
+         "myspider.pipelines.MyspiderLocalPipeline": 299,
+         "myspider.pipelines.MyspiderDBPipeline":300,
+      } #数字越小,优先级越高
+  ```
+
+  - 在高优先级管道的process_item中,return item,**return的值就会被后面管道作为item参数接收**
+
+  ```python
+  class MyspiderLocalPipeline:#优先级299,在前面
+      def process_item(self, item, spider):#1.接收到spiders的item对象
+          xxx#2.本地存储item对象
+          return item#3.返回item对象
+  class MyspiderDBPipeline:#优先级300,在后面
+      def process_item(self, item, spider):#4.item接收到前面过程3返回的item对象
+          xxx#5.上传数据库存储item对象
+          retumlrn item
+  ```
+  
+- ImagesPipeline(需要运行环境有pillow):
+
+  ```python
+  #./pipelines.py
+  import scrapy
+  from scrapy.pipelines.images import ImagesPipeline
+  class imgPipe(ImagesPipeline):
+  	#根据图片地址对图片数据进行请求
+  	def get_media_requests(self, item, info):
+  		yield scrapy.Request(item['src'])
+  	#指定图片存储的路径
+  	def file_path(self, request, response=None, info=None,):
+  		imgName = request.url.split('/')[-1]
+  		return imgName
+  	#将item传递给下一个管道类 
+  	def item_completed(self, results, item, info):
+  		return item
+  ```
+
+  ```python
+  #指定图片存储的目录
+  IMAGES_STORE = './img_bobo'
+  #指定开启的管道
+  ITEM_PIPELINES = {
+     "myspider.pipelines.imgPipe": 300,
+  }
+  ```
+
+#### 下载中间件
+
+
+
+#### scrapy常见问题
+
+- scrapy怎么确定数据是给调度器还是提交给管道?:**靠数据类型判断**
+
+- 针对不同的网页解析,怎么定义不同的方法?:**调用不同的回调函数**,一般情况下**一类页面对应一个爬虫方法,分析页面中所有的有价值元素(url和持久化数据)进行yield**
+
+```python
+# ./spiders/myspider.py
+class Myspider(scrapy.Spider):
+	def parse(self, response):
+        subpages = response.xpath(...@href).extract()
+        for sub in subpages:
+            yield scrapy.Request(sub,callback=self.subparse)#调用self.subparse
+    def subparse(self,reponse):
+```
+
+#### Scrapy爬虫程序框架
+
+
+```python
+#./items.py
+import scrapy
+class MyspiderItem(scrapy.Item):
+    filename = scrapy.Field()
+    url = scrapy.Field()
+```
+```python
+#./pipelines.py
+class MyspiderPipeline:
+	fp = None
+	def open_spider(self,spider):
+		print("开始爬虫......")
+		self.fp = open('./images.txt','w+')
+	def process_item(self, item, spider):
+		self.fp.write(item["url"]+'\n')
+		return item
+	def close_spider(self,spider):
+		print("结束爬虫")
+		self.fp.close()
+```
+```python
+# ./spiders/homepage.py
+import scrapy
+from myspider.items import MyspiderItem
+class HomepageSpider(scrapy.Spider):
+    name = "home"#爬虫程序名称,作为程序的"唯一标识"(scrapy crawl home)
+    allowed_domains = ["aaa.com"]#过滤器根据这个进行过滤网址,可以为空
+    start_urls = ["https://aaa.com","https://bbb.com"]#爬虫起始网址
+    urlSet = set()#自定义一些哈希集合用来对网址进行去重
+    #默认启动钩子函数
+    def start_requests(self):
+        for url in self.start_urls:
+            yield scrapy.Request(url=url,callback=self.parse)
+    #默认初始爬虫方法,一般用来爬取主页
+    def parse(self,response):#response是从下载器接收到的响应对象
+        nextpages = response.xpath('//span[@id="pe100_page_contentpage"]/div/a/@href').extract()
+        for nextpage in nextpages:
+            if nextpage not in self.urlSet:
+                self.urlSet.add(nextpage)
+                yield scrapy.Request(nextpage,callback=self.parse)
+                print(nextpage)
+        subpages = response.xpath('//div[@class="MidL_con"]/p/a/@href').extract()
+        for sub in subpages:
+            yield scrapy.Resuest(url=url,callback=self.subparse)
+    #自定义爬虫方法,一般用来爬取更深层次的页面
+    def subparse(self,response):
+        images = response.xpath('//div[@class="MidL_con"]/p/a/@href').extract()
+        for image in images:
+            #构建item对象
+            item = MyspiderItem()
+            item["url"] = image
+            item["filename"] = xxx
+            yield item
+```
+
+```python
+#./settings.py
+ROBOTSTXT_OBEY = False
+LOG_LEVEL = 'ERROR'
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+ITEM_PIPELINES = {
+   "myspider.pipelines.MyspiderPipeline": 300,
+} 
+```
+
+## 下载中间件
+
+#### UA&IP代理(发送请求)
+
+#### selenium(处理请求)
+
+
 

@@ -280,21 +280,59 @@ VPN:virtual-private-network(虚拟私有网络)
   - ESP:执行(加密,验证完整性)
   - AH:验证完整性无加密(不推荐适用)
 
-#### 搭建trojan服务器
+## 2.2搭建Trojan协议VPN
+
+- nginx搭建http代理
 
 ```nginx
-
+server {
+        listen 34;
+        location / {
+        	resolver 8.8.8.8;
+            proxy_pass $scheme://$host$request_uri;
+            proxy_set_header Host $host;
+        }
+}
 ```
 
+#### Trojan协议简介
+
+[原链接](https://p4gefau1t.github.io/trojan-go/basic/trojan/)
+
+- `Shadowsocks`:
+  - 使用**高匿名**的加密协议,数据包本身没有任何特征
+  - 很难通过防火墙检测;因为GFW在检测到随机特征(大流量,随机字节流,高位端口)之后会进行主动检测(GFW**主动连接服务器的这个端口**检查通信对象是否是一个正常网站)
+- `Trojan`:
+  - 使用**常规**的TLS协议,看起来流量与HTTPS网站相同(HTTPS加密).TLS保证流量的保密性,完整性,防范中间人
+  - 容易通过防火墙检测,除非针对特定网站使用无差别封锁:
+    - 如果TLS连接建立失败,返回400 Bad Request
+    - 如果识别为**非Trojan协议**或者**密码错误**:将会代理到HTTPS服务器上面去
+    - 如果**识别为Trojan协议并且密码正确**:将会解析客户端的请求并**代理用户的流量**
+
+#### Trojan-GO搭建
+
+- 搭建web服务器
+- 配置TLS/SSL(HTTPS)证书
+- 配置server.json
+  - localaddr/port:监听的地址和端口
+  - remoteaddr/port:如果不是trojan协议或者密码错误时候使用的服务端口和ip
+
 ```trojan
-"run_type": "server",
+{
+    "run_type": "server",
     "local_addr": "0.0.0.0",
     "local_port": 443,
     "remote_addr": "127.0.0.1",
-    "remote_port": 31543,
+    "remote_port": 80,
     "password": [
-    "6d2ySW2py"
+        "your_awesome_password"
     ],
+    "ssl": {
+        "cert": "server.crt",
+        "key": "server.key",
+        "fallback_port": 1234
+    }
+}
 
 ```
 

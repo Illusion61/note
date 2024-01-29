@@ -1,3 +1,17 @@
+## Grade
+
+| Labs          | 8% (24 points)      |
+| :------------ | :------------------ |
+| Homework      | 12% (36 points)     |
+| **Project 1** | **10% (30 points)** |
+| **Project 2** | **10% (30 points)** |
+| **Project 3** | **10% (30 points)** |
+| **Project 4** | **10% (30 points)** |
+| Midterm       | 16% (48 points)     |
+| Final         | 24% (72 points)     |
+
+
+
 为什么C中使用struct需要用`struct Student student`https://poe.com/s/SlZ9u08r8xPWZ1YBu34F
 
 如果使用typedef,就不再需要使用struct

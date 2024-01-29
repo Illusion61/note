@@ -13,6 +13,8 @@ scp ./authorized_keys cs61c-atx@hive2.cs.berkeley.edu:/home/cc/cs61c/sp24/class/
 https://github.com/61c-student/sp24-lab-Illusion61
 ```
 
+https://raw.githubusercontent.com/Illusion61/note/main/others/markdown/
+
 
 
 ## URAP
@@ -79,6 +81,20 @@ Beyond technical skills, I am passionate about leveraging technology to improve 
 - 地点:online,remote
 - 需要额外填写链接
 
+/etc/letsencrypt/live/sciform.one/fullchain.pem
 
+/etc/letsencrypt/live/sciform.one/privkey.pem
+
+
+
+/etc/letsencrypt/live/manga.sciform.one/fullchain.pem
+
+/etc/letsencrypt/live/manga.sciform.one/privkey.pem
 
 DeNevc
+
+39291226
+
+09308
+
+1680370154

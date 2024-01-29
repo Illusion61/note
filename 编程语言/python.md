@@ -1,6 +1,8 @@
 #  Anaconda基础操作
 
-## 虚拟环境管理
+## 环境管理
+
+#### 虚拟环境管理
 
 ```conda
 #创建虚拟环境
@@ -14,6 +16,14 @@ conda deactivate
 #显示虚拟环境列表
 conda env list
 ```
+
+#### 包管理
+
+```conda
+查询包版本: conda list [包名]
+```
+
+
 
 ##  常见错误
 
@@ -174,6 +184,17 @@ ph1.call_by_5g()
 ```python
 func = lambda a:a**3
 print(func(2))
+```
+
+#### 集合Set
+
+```python
+chs = set() #创建集合
+chs.add('abc') #添加元素
+chs.update(['def','ghi']) #更新集合
+if 'abc' in chs: #判断元素是否在集合内
+    pass
+print(chs)#{'abc','def','ghi'}
 ```
 
 
