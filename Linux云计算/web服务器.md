@@ -43,6 +43,9 @@ HTTP/1.1 400 Bad Request：服务器无法理解客户端的请求。(请求格�
 HTTP/1.1 401 Unauthorized：请求要求身份验证。
 ```
 ```http
+HTTP/1.1 403 :拒绝访问
+```
+```http
 HTTP/1.1 404 Not Found：请求的资源在服务器上未找到。
 ```
 

@@ -1,5 +1,8 @@
 *
 !*/
 !/**/*.md
+/**/node_modules/*
+/前端开发/*
+!/前端开发/*.md
 !/others/markdown/*.png
 !.gitignore

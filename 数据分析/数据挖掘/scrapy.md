@@ -32,6 +32,11 @@ res = tree.xpath(xpath表达式)
 // 表示不定数量的多个层级(1-n)
 tag[@attrName="attrValue"] 根据属性进行筛选
 tag[index] 根据第几个进行筛选(索引从1开始)
+//input[@name="password" and @id="password"] #同时通过两个标签筛选
+//input[@id="username" or @id="password"]
+//element[text()="特定文本"] #对文本进行匹配
+//element[contains(text(), "特定文本")] #包含特定文本
+//span[@id="pe100_page_allnews"]//a[last()-1] #倒数第二个元素
 ```
 
 - 获得标签的文本和属性(也可以把文本和属性看作tree的一部分)
@@ -46,9 +51,6 @@ tag[index] 根据第几个进行筛选(索引从1开始)
 /html/head/title/text() #获得网页标题
 /html/body//div[@class="image-grid"]//img/@src #获得网页图片地址
 /html/body//div[@class="image-grid"]//img[3]/@src #获得网页图片地址
-//input[@name="password" and @id="password"] #同时通过两个标签筛选
-//input[@id="username" or @id="password"]
-//span[@id="pe100_page_allnews"]//a[last()-1] #倒数第二个元素
 ```
 
 ## Selenium
@@ -91,6 +93,7 @@ pip3 install selenium
 执行js程序: execute_script('jscode')
 前进,后退: forward(),back()
 关闭浏览器: quit()
+driver.close():关闭当前页面,如果是唯一的标签页就退出
 ```
 
 ```txt
@@ -122,6 +125,37 @@ webpages = browser.find_elements_by_xpath('//div[@class="Mid_L"]//ul/li/a')
 for web in webpages:
 	web_list.append(web.get_attribute('href'))
 ```
+
+#### selenium配置项
+
+```python
+options = ChromeOptions()
+options.add_argument('--headless')#无头浏览
+options.add_argument('--disable-gpu')#不显示
+options.add_argument('excludeSwitches=["enable-automation"]')#允许自动化(不显示头部)
+options.add_argument(r'user-data-dir=C:/homecity/Cpp/Users')#指定用户配置目录
+driver = Chrome(options=options)
+driver.implicitly_wait(6)#等待6秒加载所有内容,如果加载出来就直接继续,否则超时就显示异常(防止还没加载出来就开始解析)
+```
+
+#### undetected_chromedriver
+
+- undetected_chromedriver可以绕过cloud_flare5秒盾
+- 解析网页内容的时候语法不太一样(使用By)
+
+```python
+from selenium.webdriver.common.by import By
+from undetected_chromedriver import Chrome, ChromeOptions
+options = ChromeOptions()
+options.add_argument('excludeSwitches=["enable-automation"]')#允许自动化(不显示头部)
+options.add_argument(r'user-data-dir=C:/homecity/Cpp/Users')#指定用户配置目录
+driver = Chrome(options=options)
+driver.implicitly_wait(6)
+...
+Before = driver.find_elements(By.XPATH,'//*[@id="info"]/h1/*[@class="before"]')[0].text
+```
+
+- 不用指定driver
 
 # Scrapy
 

@@ -297,8 +297,8 @@ sudo /usr/bin/vmware-toolbox-cmd disk shrink /
 - 安装输入法:`apt-get install fcitx fcitx-googlepinyin`
   - 切换到settings中的language&region部分->Manage Install Languages->切换输入法为fcitx
   - 重启系统生效
-
 - 复制文件:把CD/DVD的虚拟设备节点改成IDE
+- 默认共享文件夹
 
 ## 酷炫终端配置
 
@@ -430,6 +430,10 @@ ip地址的正则表达式?
 # Linux基本命令
 
 # Linux进程管理
+
+pstree:以树的形式显示进程(父子关系)
+
+tree:以树的形式显示文件夹结构
 
 # Linux网络管理
 

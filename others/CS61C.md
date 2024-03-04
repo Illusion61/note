@@ -28,11 +28,13 @@ typedef struct S{
 
 ```c
 struct S{
-	int id;char* name;
+	int id;char* name;  
 };typedef struct S Student;
 ...
     struct S stu;
     Student student;
 ...
 ```
+
+`(-1)^S * (1+significand) * 2^(exponent-127)`
 

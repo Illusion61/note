@@ -3,6 +3,8 @@
 ```bash
 ssh cs61c-atx@hive2.cs.berkeley.edu
 scp ./authorized_keys cs61c-atx@hive2.cs.berkeley.edu:/home/cc/cs61c/sp24/class/cs61c-atx/.ssh/authorized_keys
+scp ./ex7_vector.c cs61c-atx@hive2.cs.berkeley.edu:/home/cc/cs61c/sp24/class/cs61c-atx/labs/lab02
+scp ./state.c cs61c-atx@hive2.cs.berkeley.edu:/home/cc/cs61c/sp24/class/cs61c-atx/61c-proj1/src
 ```
 
 ```bash
@@ -15,7 +17,11 @@ https://github.com/61c-student/sp24-lab-Illusion61
 
 https://raw.githubusercontent.com/Illusion61/note/main/others/markdown/
 
-
+```,
+leopards,bison
+squirrels,hummingbirds
+计算机的加减法运算天生是一个模2^N的同余类上的运算，满2^N会抛弃进位，那表示有符号数时使用同余类代表很正常吧，比如-1 = 2^N -1 (mod 2^N)，-2 = 2^N-2 (mod 2^N)，这实际上就是补码了。
+```
 
 ## URAP
 
@@ -98,3 +104,14 @@ DeNevc
 09308
 
 1680370154
+
+
+
+item
+
+- 第一步:实现后端接口(/api/piclist),提交参数为漫画名字,能够访问文件列表并返回所有图片名称列表
+- 第二步:访问(/artworks/:漫画名字)就接受
+
+网站数据来源？
+
+SEO怎么上去

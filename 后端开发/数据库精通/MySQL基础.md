@@ -228,3 +228,30 @@ WHERE 条件
 ## DCL语言
 
 #### 创建用户
+
+
+
+
+
+# SQL使用技巧
+
+## 数据库迁移
+
+- 导出
+
+```
+mysqldump -u <用户名> -p <数据库名> > <导出的文件名>.sql
+```
+
+- 导入
+
+```
+mysql -u <用户名> -p <目标数据库名> < <导出的文件名>.sql
+```
+
+## 本地用户密码
+
+```
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Password@123';
+```
+

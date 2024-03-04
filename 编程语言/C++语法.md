@@ -28,6 +28,9 @@ int size = ans.size();
 sort(ans.begin(),ans.end(),cmp);
 
 to_string(num);//数字转化为字符串
+
+//批量初始化
+vector<int> ans = {1,2,3,4,5,6};
 ```
 
 ## stack
@@ -84,6 +87,7 @@ unordered_set<int> hashset;
 hashset.insert(x);
 if(hashset.count(x)>0)......;//注意hashset.count(x)的结果只有可能是0或者1
 hashset.erase(0);
+hashset.clear();//清空哈希集合
 ```
 
 - 遍历

@@ -138,3 +138,12 @@ public int size();//返回集合的长度
   - LinkedHashSet
 
 #### 双列集合 Map
+
+
+
+
+
+## 内部类
+
+## 泛型原理
+

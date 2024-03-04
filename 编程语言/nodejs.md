@@ -48,6 +48,9 @@ app.get('/api/login',(req,res)=>{
     if(req.query.id == 'admin' && req.query.password == 'root')
     	res.send("<h1>Hello</h1>")
 })
+app.get('/users/:id'),(req,res)=>{
+    const userId = req.params.id;
+})
 app.listen(8080,()=>{
     console.log("Server is on. Listening on port 8080")
 })
